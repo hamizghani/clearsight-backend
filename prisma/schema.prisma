@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String
+  hospitalName  String
+  adminName     String
+  phoneNumber   String
+  hospitalAddress String
+  credits       Int      @default(0)
+  role          String   @default("user")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("users")
+}
+
+model RetinalScan {
+  id          String   @id @default(uuid())
+  userId      String
+  patientId   String
+  imageUrl    String
+  diagnosis   String?
+  diagnosisLevel String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("retinal_scans")
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  userId      String
+  amount      Int
+  type        String // "credit_purchase", "scan_usage"
+  description String?
+  createdAt   DateTime @default(now())
+
+  @@map("transactions")
+}
